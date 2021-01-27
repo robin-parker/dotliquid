@@ -18,7 +18,7 @@ jobs:
       with:
         dotnet-version: '3.1.x'
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore "src\DotLiquid.sln"
     - name: Build
       run: dotnet build --no-restore "src\DotLiquid.sln"
     - name: Test
