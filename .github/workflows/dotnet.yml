@@ -1,4 +1,4 @@
-name: .NET
+name: .NET Core
 
 on:
   push:
@@ -18,8 +18,10 @@ jobs:
       with:
         dotnet-version: '3.1.x'
     - name: Restore dependencies
-      run: dotnet restore "src\DotLiquid.sln"
-    - name: Build
-      run: dotnet build --no-restore "src\DotLiquid.sln"
-    - name: Test
-      run: dotnet test --no-build --verbosity normal "src\DotLiquid.sln"
+      run: dotnet restore src
+    - name: Build DotLiquid
+      run: dotnet build --no-restore src/DotLiquid --configuration Release --framework netstandard1.3
+    - name: Build DotLiquid.Tests
+      run: dotnet build --no-restore src/DotLiquid.Tests --configuration Release --framework netcoreapp1.0
+    - name: Test DotLiquid
+      run: dotnet test --no-build --verbosity normal src/DotLiquid.Tests/DotLiquid.Tests.csproj --framework netcoreapp1.0 --filter "TestCategory!=windows"
