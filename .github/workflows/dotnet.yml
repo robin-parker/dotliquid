@@ -33,6 +33,9 @@ jobs:
       with:
         dotnet-version: '3.1.x'
 
+    - name: Dotnet info
+      run: dotnet --info
+
     - name: Restore dependencies
       run: dotnet restore src
 
@@ -46,7 +49,7 @@ jobs:
       uses: managedkaos/print-env@v1.0
   
     - name: List Tests
-      run: dotnet test -t src/DotLiquid.Tests --no-build --verbosity diag --configuration Debug --framework netcoreapp1.0 --filter "TestCategory!=windows"
+      run: dotnet test -t src/DotLiquid.Tests --no-build --verbosity normal --configuration Debug --framework netcoreapp1.0 --filter "TestCategory!=windows"
 
     - name: Test DotLiquid
-      run: dotnet test src/DotLiquid.Tests --no-build --verbosity diag --configuration Debug --framework netcoreapp1.0 --filter "TestCategory!=windows"
+      run: dotnet test src/DotLiquid.Tests --no-build --verbosity normal --configuration Debug --framework netcoreapp1.0 --filter "TestCategory!=windows"
