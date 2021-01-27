@@ -1,10 +1,23 @@
-name: .NET Core
+name: dotnet-core
 
 on:
   push:
     branches: [ master ]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.markdown'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
   pull_request:
     branches: [ master ]
+    paths-ignore:
+      - '**/*.md'
+      - '**/*.markdown'
+      - '**/*.gitignore'
+      - '**/*.gitattributes'
+
+env:
+  config: Release
 
 jobs:
   build:
@@ -12,16 +25,22 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
-    - name: Setup .NET
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: '3.1.x'
+
     - name: Restore dependencies
       run: dotnet restore src
+
     - name: Build DotLiquid
-      run: dotnet build --no-restore src/DotLiquid --configuration Release --framework netstandard1.3
+      run: dotnet build --no-restore src/DotLiquid --configuration ${{ env.config }} --framework netstandard1.3
+
     - name: Build DotLiquid.Tests
-      run: dotnet build --no-restore src/DotLiquid.Tests --configuration Release --framework netcoreapp1.0
+      run: dotnet build --no-restore src/DotLiquid.Tests --configuration ${{ env.config }} --framework netcoreapp1.0
+
     - name: Test DotLiquid
-      run: dotnet test --no-build --verbosity normal src/DotLiquid.Tests/DotLiquid.Tests.csproj --framework netcoreapp1.0 --filter "TestCategory!=windows"
+      run: dotnet test src/DotLiquid.Tests/DotLiquid.Tests.csproj --no-restore --no-build --verbosity normal --configuration Debug --framework netcoreapp1.0 --filter "TestCategory!=windows"
