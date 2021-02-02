@@ -1,4 +1,5 @@
 name: dotnet-core
+# Github Action config to replace the .travis.yml used by the DotLiquid main repo.
 
 on:
   push:
@@ -31,7 +32,7 @@ jobs:
     - name: Setup .NET Core SDK
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 1.0.4 #'3.1.202'
+        dotnet-version: 1.0.4
 
     - name: Dotnet info
       run: dotnet --info
@@ -41,15 +42,24 @@ jobs:
 
     - name: Build DotLiquid
       run: dotnet build src/DotLiquid --configuration ${{ env.config }} --framework netstandard1.3
+    
+    - name: Build DotLiquid.Website
+      run: dotnet build src/DotLiquid.Website --configuration Release --framework netcoreapp1.1.1
 
     - name: Build DotLiquid.Tests
       run: dotnet build src/DotLiquid.Tests --configuration ${{ env.config }} --framework netcoreapp1.0
 
+    - name: DotLiquid.Website.Tests
+      run: dotnet build src/DotLiquid.Website.Tests --configuration Release --framework netcoreapp1.1.1
+
     - name: Environment Printer
       uses: managedkaos/print-env@v1.0
   
-    - name: List Tests
-      run: dotnet test -t src/DotLiquid.Tests/DotLiquid.Tests.csproj --framework netcoreapp1.0 --filter "TestCategory!=windows"
+    #- name: List Tests
+    #  run: dotnet test -t src/DotLiquid.Tests/DotLiquid.Tests.csproj --framework netcoreapp1.0 --filter "TestCategory!=windows"
 
     - name: Test DotLiquid
-      run: dotnet test ssrc/DotLiquid.Tests/DotLiquid.Tests.csproj --framework netcoreapp1.0 --filter "TestCategory!=windows"
+      run: dotnet test src/DotLiquid.Tests/DotLiquid.Tests.csproj --framework netcoreapp1.0 --filter "TestCategory!=windows"
+
+    - name: Test DotLiquid.Website
+      run: src/DotLiquid.Website.Tests/DotLiquid.Website.Tests.csproj --framework netcoreapp1.1.1  --filter "TestCategory!=windows"
