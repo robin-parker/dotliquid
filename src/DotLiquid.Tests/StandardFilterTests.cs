@@ -1129,11 +1129,6 @@ Kitchen products:
             products.Add(new Hash { {"title","Limited edition sneakers"}, {"available",false} }); // 'available' = false
             products.Add(new Hash { {"title","Boring sneakers"}, {"available",true} });
 
-//            var result = StandardFilters.Where(products, "available").Cast<Hash>().ToArray();
-//            Assert.AreEqual(2, result.Count());
-//            Assert.AreEqual(expected: "Coffee mug", actual: result[0]["title"]);
-//            Assert.AreEqual(expected: "Boring sneakers", actual: result[1]["title"]);
-
             Helper.AssertTemplateResult(
                 expected: "\r\n\r\nAvailable products:\r\n\r\n- Coffee mug\r\n\r\n- Boring sneakers\r\n",
                 template: @"{% assign available_products = products | where: ""available"" %}

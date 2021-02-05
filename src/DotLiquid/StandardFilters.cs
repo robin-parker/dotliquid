@@ -868,7 +868,7 @@ namespace DotLiquid
                 return null;
 
             if (property.IsNullOrWhiteSpace()){
-                throw new ArgumentException($"'{nameof(property)}' cannot be null or empty.", nameof(property));
+                throw new ArgumentNullException($"'{nameof(property)}' cannot be null or empty.", nameof(property));
             }
 
             List<object> inputList;

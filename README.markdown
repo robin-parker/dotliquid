@@ -1,6 +1,7 @@
 ﻿# DotLiquid
 
 [![DotLiquid tag on Stack Overflow](https://img.shields.io/badge/stackoverflow-dotliquid-orange.svg)](https://stackoverflow.com/questions/tagged/dotliquid)
+[![GitHub build](https://github.com/robin-parker/dotliquid/workflows/dotnet-core/badge.svg)](https://github.com/robin-parker/dotliquid/actions?query=workflow%3Adotnet-core)
 [![AppVeyor build](https://ci.appveyor.com/api/projects/status/github/dotliquid/dotliquid?branch=master&svg=true)](https://ci.appveyor.com/project/tgjones/dotliquid)
 [![TravisCI build](https://travis-ci.org/dotliquid/dotliquid.svg?branch=master)](https://travis-ci.org/dotliquid/dotliquid)
 [![codecov](https://codecov.io/gh/dotliquid/dotliquid/branch/master/graph/badge.svg)](https://codecov.io/gh/dotliquid/dotliquid)
