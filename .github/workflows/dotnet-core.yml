@@ -1,4 +1,4 @@
-name: dotnet-core
+name: .NET Core 1.0.4
 # Github Action config to replace the .travis.yml used by the DotLiquid main repo.
 
 on:
@@ -18,48 +18,55 @@ on:
       - '**/*.gitattributes'
 
 env:
-  config: Release
+  # Stop wasting time caching packages
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  # Disable sending usage data to Microsoft
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+  # Project name to pack and publish
+  PROJECT_NAME: DotLiquid
+  # GitHub Packages Feed settings
+  GITHUB_FEED: https://nuget.pkg.github.com/robin-parker/
+  GITHUB_USER: robin-parker
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  # Official NuGet Feed settings
+  #NUGET_FEED: https://api.nuget.org/v3/index.json
+  #NUGET_KEY: ${{ secrets.NUGET_KEY }}
 
 jobs:
   build:
-
     runs-on: ubuntu-16.04 #ubuntu-latest
 
     steps:
-    - name: Checkout code
+    - name: Checkout
       uses: actions/checkout@v2
-
-    - name: Setup .NET Core SDK
+    - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 1.0.4
-
     - name: Dotnet info
       run: dotnet --info
-
     - name: Restore dependencies
       run: dotnet restore src
-
     - name: Build DotLiquid
-      run: dotnet build src/DotLiquid --configuration ${{ env.config }} --framework netstandard1.3
-    
-    - name: Build DotLiquid.Website
-      run: dotnet build src/DotLiquid.Website --configuration Release --framework netcoreapp1.1.1
-
+      run: dotnet build src/DotLiquid --configuration Release --framework netstandard1.3
     - name: Build DotLiquid.Tests
-      run: dotnet build src/DotLiquid.Tests --configuration ${{ env.config }} --framework netcoreapp1.0
-
-    - name: DotLiquid.Website.Tests
-      run: dotnet build src/DotLiquid.Website.Tests --configuration Release --framework netcoreapp1.1.1
-
-    - name: Environment Printer
-      uses: managedkaos/print-env@v1.0
-  
-    #- name: List Tests
-    #  run: dotnet test -t src/DotLiquid.Tests/DotLiquid.Tests.csproj --framework netcoreapp1.0 --filter "TestCategory!=windows"
-
+      run: dotnet build src/DotLiquid.Tests --configuration Release --framework netcoreapp1.0
+    #- name: Build DotLiquid.Website
+    #  run: dotnet build src/DotLiquid.Website --configuration Release --framework netcoreapp1.1.1
+    #- name: DotLiquid.Website.Tests
+    #  run: dotnet build src/DotLiquid.Website.Tests --configuration Release --framework netcoreapp1.1.1
+    #- name: Environment Printer
+    #  uses: managedkaos/print-env@v1.0
     - name: Test DotLiquid
       run: dotnet test src/DotLiquid.Tests/DotLiquid.Tests.csproj --framework netcoreapp1.0 --filter "TestCategory!=windows"
-
-    - name: Test DotLiquid.Website
-      run: src/DotLiquid.Website.Tests/DotLiquid.Website.Tests.csproj --framework netcoreapp1.1.1  --filter "TestCategory!=windows"
+    #- name: Test DotLiquid.Website
+    #  run: src/DotLiquid.Website.Tests/DotLiquid.Website.Tests.csproj --framework netcoreapp1.1.1  --filter "TestCategory!=windows"
+    - name: Pack
+      #if: matrix.os == 'ubuntu-latest'
+      run: dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=$GITHUB_RUN_ID src/$PROJECT_NAME/$PROJECT_NAME.*proj
+    - name: Upload Artifact
+      #if: matrix.os == 'ubuntu-latest'
+      uses: actions/upload-artifact@v2
+      with:
+        name: nupkg
+        path: ./src/${{ env.PROJECT_NAME }}/bin/Release/*.nupkg
