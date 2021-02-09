@@ -65,7 +65,7 @@ jobs:
     #  run: src/DotLiquid.Website.Tests/DotLiquid.Website.Tests.csproj --framework netcoreapp1.1.1  --filter "TestCategory!=windows"
     - name: Pack
       #if: matrix.os == 'ubuntu-latest'
-      run: dotnet pack -v normal -c Release --no-restore --include-symbols --include-source -p:PackageVersion=$GITHUB_RUN_ID src/$PROJECT_NAME/$PROJECT_NAME.*proj
+      run: dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$GITHUB_RUN_ID src/$PROJECT_NAME/$PROJECT_NAME.*proj
     - name: Upload Artifact
       #if: matrix.os == 'ubuntu-latest'
       uses: actions/upload-artifact@v2
