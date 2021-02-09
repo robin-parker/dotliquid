@@ -58,8 +58,8 @@ namespace DotLiquid.Util
             // V - not implemented
             { "w", (dateTime) => ((int) dateTime.DayOfWeek).ToString() },
             { "W", (dateTime) => CultureInfo.CurrentCulture.Calendar.GetWeekOfYear(dateTime, CalendarWeekRule.FirstFullWeek, DayOfWeek.Monday).ToString().PadLeft(2, '0') },
-            { "x", (dateTime) => dateTime.ToString("d", CultureInfo.CurrentCulture) },
-            { "X", (dateTime) => dateTime.ToString("T", CultureInfo.CurrentCulture) },
+            { "x", (dateTime) => dateTime.ToString("MM/dd/yy", CultureInfo.CurrentCulture) },
+            { "X", (dateTime) => dateTime.ToString("HH:mm:ss", CultureInfo.CurrentCulture) },
             { "y", (dateTime) => dateTime.ToString("yy", CultureInfo.CurrentCulture) },
             { "Y", (dateTime) => dateTime.ToString("yyyy", CultureInfo.CurrentCulture) },
             { "z", (dateTime) => dateTime.ToString("%K", CultureInfo.CurrentCulture).Replace(":", string.Empty) },

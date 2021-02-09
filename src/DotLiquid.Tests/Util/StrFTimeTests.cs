@@ -65,7 +65,7 @@ namespace DotLiquid.Tests.Util
         // V // Week number of the week-based year (01..53)
         [TestCase("%w", ExpectedResult = "0")] // Day of the week, Sunday is 0 (0..6)
         [TestCase("%W", ExpectedResult = "01")] // Week number with the first Monday as the first day of week one (00..53)
-        [TestCase("%x", ExpectedResult = "08/01/2012")] // Locale Date representation (08/23/01)
+        [TestCase("%x", ExpectedResult = "01/08/12")] // Locale Date representation (08/23/01)
         [TestCase("%X", ExpectedResult = "14:32:14")] // Locale Time representation (14:55:02)
         [TestCase("%y", ExpectedResult = "12")] // Year, last two digits (00-99)
         [TestCase("%Y", ExpectedResult = "2012")] // Year with century (2001)
@@ -73,9 +73,9 @@ namespace DotLiquid.Tests.Util
         [TestCase("%", ExpectedResult = "%")]
         public string TestFormat(string format)
         {
-            using (CultureHelper.SetCulture("en-GB"))
+            using (CultureHelper.SetCulture("en-US"))
             {
-                Assert.That(CultureInfo.CurrentCulture, Is.EqualTo(new CultureInfo("en-GB")));
+                Assert.That(CultureInfo.CurrentCulture, Is.EqualTo(new CultureInfo("en-US")));
                 return new DateTime(2012, 1, 8, 14, 32, 14, 123).ToStrFTime(format);
             }
         }
