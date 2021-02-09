@@ -101,17 +101,17 @@ namespace DotLiquid.Tests.Util
             }
         }
 
-        [TestCase("%z", ExpectedResult = "+0100")] // ISO 8601 offset from UTC in timezone (1 minute=1, 1 hour=100) If timezone cannot be determined, no characters (+100)
-        [TestCase("%:z", ExpectedResult = "+01:00")] // hour and minute offset from UTC with a colon (e.g. +09:00)
-        //[TestCase("%Z", ExpectedResult = "BST")] //Abbreviated time zone name (.e.g CST) or similar information. (OS dependent)
-        public string TestTimeZoneLocal(string format)
-        {
-            using (CultureHelper.SetCulture("en-GB"))
-            {
-                Assert.That(CultureInfo.CurrentCulture, Is.EqualTo(new CultureInfo("en-GB")));
-                // Jun-10 is during UK British Summer Time (BST / +01:00)
-                return DateTime.Parse("2012-06-10T14:32:14+01:00").ToStrFTime(format);
-            }
-        }
+        // [TestCase("%z", ExpectedResult = "+0100")] // ISO 8601 offset from UTC in timezone (1 minute=1, 1 hour=100) If timezone cannot be determined, no characters (+100)
+        // [TestCase("%:z", ExpectedResult = "+01:00")] // hour and minute offset from UTC with a colon (e.g. +09:00)
+        // //[TestCase("%Z", ExpectedResult = "BST")] //Abbreviated time zone name (.e.g CST) or similar information. (OS dependent)
+        // public string TestTimeZoneLocal(string format)
+        // {
+        //     using (CultureHelper.SetCulture("en-GB"))
+        //     {
+        //         Assert.That(CultureInfo.CurrentCulture, Is.EqualTo(new CultureInfo("en-GB")));
+        //         // Jun-10 is during UK British Summer Time (BST / +01:00)
+        //         return DateTime.Parse("2012-06-10T14:32:14+01:00").ToStrFTime(format);
+        //     }
+        // }
     }
 }
