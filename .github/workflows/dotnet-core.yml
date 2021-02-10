@@ -26,7 +26,7 @@ env:
   CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
   # Project name to pack and publish
   PROJECT_NAME: DotLiquid
-  VERSION: 2.1.$GITHUB_RUN_ID
+  VERSION: 2.1.${{ github.run_number }}
   # GitHub Packages Feed settings
   GITHUB_USER: robin-parker
   GITHUB_FEED: https://nuget.pkg.github.com/$GITHUB_USER/
