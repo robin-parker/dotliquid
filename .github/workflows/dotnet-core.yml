@@ -67,10 +67,10 @@ jobs:
     #  run: src/DotLiquid.Website.Tests/DotLiquid.Website.Tests.csproj --framework netcoreapp1.1.1  --filter "TestCategory!=windows"
     - name: Create NuGet alpha package
       #if: matrix.os == 'ubuntu-latest'
-      run: dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion="$VERSION-alpha" src/$PROJECT_NAME/$PROJECT_NAME.csproj --runtime netstandard1.3
+      run: dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion="$VERSION-alpha" src/$PROJECT_NAME/$PROJECT_NAME.csproj
     - name: Push to GitHub Packages
       run: |
-        for f in ./nupkg/*.nupkg
+        for f in src/$PROJECT_NAME/bin/Release/*.nupkg
         do
           curl -vX PUT -u "$GITHUB_USER:$GITHUB_TOKEN" -F package=@$f $GITHUB_FEED
         done
