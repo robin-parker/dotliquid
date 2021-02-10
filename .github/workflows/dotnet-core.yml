@@ -28,8 +28,8 @@ env:
   PROJECT_NAME: DotLiquid
   VERSION: 2.1.${{ github.run_number }}
   # GitHub Packages Feed settings
-  GITHUB_USER: robin-parker
-  GITHUB_FEED: https://nuget.pkg.github.com/$GITHUB_USER/
+  GITHUB_USER: ${{ github.repository_owner }}
+  GITHUB_FEED: https://nuget.pkg.github.com/${{ github.repository_owner }}/
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   # Official NuGet Feed settings
   #NUGET_FEED: https://api.nuget.org/v3/index.json
@@ -67,8 +67,8 @@ jobs:
     #  run: src/DotLiquid.Website.Tests/DotLiquid.Website.Tests.csproj --framework netcoreapp1.1.1  --filter "TestCategory!=windows"
     - name: Create NuGet alpha package
       #if: matrix.os == 'ubuntu-latest'
-      run: dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion="$VERSION-alpha" -o nupkg src/$PROJECT_NAME/$PROJECT_NAME.csproj --runtime netstandard1.3
-    - name: Push to GitHub Feed
+      run: dotnet pack -v normal -c Release --nobuild --include-symbols --include-source -p:PackageVersion="$VERSION-alpha" --output nupkg src/$PROJECT_NAME/$PROJECT_NAME.csproj --runtime netstandard1.3
+    - name: Push to GitHub Packages
       run: |
         for f in ./nupkg/*.nupkg
         do
