@@ -42,7 +42,7 @@ jobs:
     steps:
     - name: Checkout
       uses: actions/checkout@v2
-    - name: Setup .NET Core
+    - name: Setup .NET Core (v1.0.4)
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 1.0.4
@@ -65,15 +65,16 @@ jobs:
       run: dotnet test src/DotLiquid.Tests/DotLiquid.Tests.csproj --framework netcoreapp1.0 --filter "TestCategory!=windows"
     #- name: Test Website
     #  run: src/DotLiquid.Website.Tests/DotLiquid.Website.Tests.csproj --framework netcoreapp1.1.1  --filter "TestCategory!=windows"
-    - name: Create NuGet alpha package
-      #if: matrix.os == 'ubuntu-latest'
-      run: dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion="$VERSION-alpha" src/$PROJECT_NAME/$PROJECT_NAME.csproj
-    - name: Push to GitHub Packages
-      run: |
-        for f in src/$PROJECT_NAME/bin/Release/*.nupkg
-        do
-          curl -vX PUT -u "$GITHUB_USER:$GITHUB_TOKEN" -F package=@$f $GITHUB_FEED
-        done
+
+#    - name: Create NuGet alpha package
+#      #if: matrix.os == 'ubuntu-latest'
+#      run: dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion="$VERSION-alpha" src/$PROJECT_NAME/$PROJECT_NAME.csproj
+#    - name: Push to GitHub Packages
+#      run: |
+#        for f in src/$PROJECT_NAME/bin/Release/*.nupkg
+#        do
+#          curl -vX PUT -u "$GITHUB_USER:$GITHUB_TOKEN" -F package=@$f $GITHUB_FEED
+#        done
 #    - name: Upload Artifact
 #      #if: matrix.os == 'ubuntu-latest'
 #      uses: actions/upload-artifact@v2
@@ -81,18 +82,47 @@ jobs:
 #        name: nupkg
 #        path: ./src/${{ env.PROJECT_NAME }}/bin/Release/*.nupkg
 
-  prerelease:
+  alpha:
     needs: build
-    #if: github.ref == 'refs/heads/<branch_name>'
+    if: github.ref == 'refs/heads/master' ## triggered for any commit to master.
     runs-on: ubuntu-16.04 #ubuntu-latest
     steps:
-      - name: Download artifacts
-        uses: actions/download-artifact@v1
-        with:
-          name: nupkg
-      - name: Push to GitHub feed
+      - name: Create Alpha NuGet package
+        #if: matrix.os == 'ubuntu-latest'
+        run: dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion="$VERSION-alpha" src/$PROJECT_NAME/$PROJECT_NAME.csproj
+#      - name: Download artifacts
+#        uses: actions/download-artifact@v1
+#        with:
+#          name: nupkg
+      - name: Push to GitHub Packages
         run: |
-          for f in ./nupkg/*.nupkg
+          for f in ./src/${{ env.PROJECT_NAME }}/bin/Release/*.nupkg
           do
             curl -vX PUT -u "$GITHUB_USER:GITHUB_TOKEN" -F package=@$f $GITHUB_FEED
           done
+
+  release:
+    needs: build
+    if: github.event_name == 'release' ## Only triggered when a github release is created.
+    runs-on: ubuntu-16.04 #ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v2
+    - name: Setup .NET Core (v1.0.4)
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 1.0.4
+    - name: Create Release NuGet package
+      run: |
+        arrTag=(${GITHUB_REF//\// })
+        VERSION="${arrTag[2]}"
+        echo Tag Version: $VERSION
+        VERSION="${VERSION//v}"
+        echo Clean Version: $VERSION
+        dotnet pack -v normal -c Release --include-symbols --include-source -p:PackageVersion=$VERSION src/$PROJECT_NAME/$PROJECT_NAME.csproj
+    - name: Push to GitHub Feed
+      run: |
+        for f in ./src/${{ env.PROJECT_NAME }}/bin/Release/*.nupkg
+        do
+          curl -vX PUT -u "$GITHUB_USER:$GITHUB_TOKEN" -F package=@$f $GITHUB_FEED
+        done
